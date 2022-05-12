@@ -23,6 +23,12 @@
     10-swap.cpp:交换两个对象内容
     11-copy.cpp:拷贝
     12-copy_test.cpp:测试不同情况下调用不同的拷贝函数
+  set:关于集合的相关算法
+    01-set_test.cpp:运用实例
+    02-set_union.cpp:并集
+    03-set_intersection.cpp:交集
+    04-set_difference.cpp:差集
+    05-set_symmetric_difference.cpp:对称差集
 ```
 
 ## 1. 概述
@@ -279,3 +285,51 @@
 
 - 它与copy几乎完全一样
   - 区别：它是逆向复制，copy是正向复制
+
+## 5. set相关算法
+
+- STL提供了四种集合相关的算法
+  - 并集(union)
+  - 交集(intersection)
+  - 差集(difference)
+  - 对称差集(symmetric difference)
+- 这四个算法可接受set/multiset容器
+  - 就是元素要有序，可以重复
+- 接受的参数至少为4个，表示两个空间
+- 元素允许重复与不允许重复结果会有些许差异的
+- 元素有序是这些算法的前提
+- 使用这些算法都需要包含< algorithm >
+
+### 5.1. set_union
+
+- 并集
+- 返回迭代器，指向尾端
+- 对于multiset的元素，如果两个区间内分别存在m、n个，那么结果区间内它的数量是max(m, n)
+- 输入区间的相对顺序不会改变
+
+### 5.2. set_intersection
+
+- 交集
+- 对于multiset的元素，如果两个区间内分别存在m、n个，那么结果区间内它的数量是min(m, n)
+
+### 5.3. set_difference
+
+- 差集
+- 对于multiset的元素，如果两个区间内分别存在m、n个，那么结果区间内它的数量是max(m-n, 0)
+
+### 5.4. set_symmetric_difference
+
+- 对称差集
+- 构造出集合 (S1-S2)U(S2-S1)
+- 对于multiset的元素，如果两个区间内分别存在m、n个，那么结果区间内它的数量是|m-n|
+
+## 6. heap算法
+
+- 四个heap算法在STL_container的heap中已经学过了
+  - make_heap()
+  - pop_heap()
+  - push_heap()
+  - sort_heap()
+- 包含在头文件<stl_heap.h>中，它包含于<stl_algo.h>中
+
+## 7. 其他算法
