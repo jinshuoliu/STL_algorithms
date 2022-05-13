@@ -5,6 +5,9 @@
     "xstddef": "cpp",
     "vector": "cpp",
     "xutility": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "algorithm": "cpp",
+    "xmemory": "cpp",
+    "iterator": "cpp"
   }
 }
