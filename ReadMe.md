@@ -50,6 +50,16 @@
       17-transform.cpp:生成新区间
       18-unique.cpp:删相同的元素
     01-test.cpp:测试代码
+    02-lower_bound.cpp:查找插入位置
+    03-binary_search.cpp:二分查找
+    04-next_permutation.cpp:前后的排列组合
+    05-random_shuffle.cpp:随机重排列
+    06-partial_sort.cpp:部分排序
+    07-sort.cpp:排序
+    08-equal_range.cpp:二分查找
+    09-inplcae_merge.cpp:原地合并
+    10-nth_element.cpp:部分排序
+    11-mergesort.cpp:排序
 ```
 
 ## 1. 概述
@@ -506,3 +516,133 @@
 - 带复制
 
 ### 7.2. lower_bound
+
+- 二分查找的一个版本
+- 在已排序的区间查找元素value，有就返回迭代器指向第一个元素，没有就返回指向value可以插入的位置
+
+#### 7.2.1. upper_bound
+
+- 返回value可以插入的位置(不管区间内有没有value)
+
+### 7.3. binary_search
+
+- 二分查找
+- 它里面就是利用lower_bound找到位置，然后利用该位置的值与所求值做对比
+
+### 7.4. next_permutation
+
+- 用来计算排列组合关系的算法
+- 排列组合：
+  - 序列{a,b,c}有六种排列组合abc,acb,bac,bca,cab,cba
+  - 按照字典序排列，abc是第一个，acb次之，cba最后
+  - 按照上面的规则，可以给序列中的字符排序
+  - 按照上面的顺序，可以计算字符的下(上)一个排列组合
+- 会使得序列按规则排列组合，如果有就返回true，无就返回false
+
+![next_permutation](MD/assert/7-4-next_permutation.png)
+
+- 算法逻辑：
+  - 从尾端开始向前寻找两个相邻元素
+  - 令第一个元素为*i，第二个元素为 *ii，且满足 *i<*ii
+  - 再从尾端开始向前检查，找到第一个大于*i 的元素 *j
+  - 将i，j元素对调，再将ii之后的所有元素颠倒排列
+  - 就得到了下一个排列
+
+#### 7.4.1. prev_permutation
+
+- 排列组合的前一个
+
+### 7.5. random_shuffle
+
+- 将区间元素次序随机重排列(!!!随机重排)
+
+### 7.6. partial_sort/partial_sort_copy
+
+- 接受一个在[first,last)中的迭代器middle，然后重新安排[first,last)
+  - 使得序列中的middle-first个最小元素以递增顺序排列并置于[first,middle)中
+  - 其余元素置于后半部，并不保证原相对顺序
+
+### 7.7. sort
+
+- 排序很重要
+  - RB-tree底层的容器已自动排序
+  - stack、queue、priority-queue有特定的出入口
+  - vector、deque可以使用
+  - list、slist不可以使用
+- 限定条件：该算法需要接受两个RandomAccessIterator
+
+- 当数据量大时使用Quick Sort(递归排序)
+- 当数据量小后为了避免递归带来的额外负荷，使用Insertion Sort
+- 如果递归层次过深就是用Heap Sort
+
+#### 7.7.1. Insertion Sort
+
+- 以双层循环的形式进行
+  - 外循环遍历整个序列，每次迭代决定出一个子区间
+  - 内循环遍历子区间，将子区间的每一个逆转对倒转过来
+    - 逆转对：任何两个迭代器i,j 若i<j 而 *i>*j
+- 不再存在逆转对，则排序完毕
+- 复杂度为O(N^2)
+- 适合处理少量数据
+
+#### 7.7.2. Quick Sort
+
+- 适合处理大量数据
+  - 平均复杂度是O(NlogN)的最坏是O(N^2)
+- 算法简述
+  - S代表将要被处理的序列
+  - 如果S的元素个数为0或1，结束
+  - 取S中的任何一个元素，当作枢轴v
+  - 将S分割为L，R两段，使L内的每一个元素都小于或等于v，R内的每一个元素都大于或等于v
+  - 对L,R 递归执行Quick Sort
+- 三点中值(Median-of-Three)
+  - 任何元素都可以当作枢轴，但是太过不合适的会影响Quick Sort的效率，为了避免元素输入的不够随机带来的恶化效应
+  - 最理想最稳当的方式是取整个序列的头、尾、中央三个位置的元素，以其中值作为枢轴
+- 分割(Partitioining)
+  - 令头端迭代器first向尾部移动，尾端迭代器last向头端移动
+  - 当*first大于或等于枢轴时就停下来，当 *last小于或等于枢轴时也停下来
+  - 如果两个迭代器相对位置仍为first左last右，就交换迭代器的元素，然后向中央逼近
+  - 如果他们相对位置改变，则调整完毕，以first为轴将序列分开进行递归操作
+- 阈值(threshold)
+  - 当序列很小的时候就使用Insertion Sort以提高效率
+  - 阈值就是序列多小算小
+- final insertion sort
+  - 将某个大小以下的序列停在马上就要排序成功的状态，然后再用一个Insertion Sort将他们排序完成
+  - 这样比把所有的子序列彻底排序好要效率高
+- introsort
+  - 内省式排序
+  - 它的行为在大部分情况下与median-of-3 Quick Sort完全相同
+  - 但是在分割行为有二次行为的倾向时，能够自我侦测，转而使用Heap Sort维持效率
+
+### 7.8. equal_range
+
+- 二分查找法的一个版本
+  - 在已排序的区间中查找value
+  - 返回两个迭代器i，j
+    - i是value可插入的第一个位置
+    - j是value可插入的最后一个位置
+    - [i, j)区间内的元素值全为value
+
+### 7.9. inplace_merge
+
+- 合并两个连接在一起的序列
+  - 这两个序列物理上连接在一起
+  - 但是逻辑上他们并不是一个序列
+    - 他们各自排序
+
+### 7.10. nth_element
+
+- 重新排列区间
+  - 使得迭代器nth所指的元素与区间重排列后同一位置的元素同值
+    - 这个的意思是：经过这个算法排列后，处于nth的位置的元素值与将序列完全按顺序排列好后处于nth位置的元素值相同
+    - 这个算法并不能将序列完全排列
+  - 并保证[nth, last)内的任何一个元素都不小于[first, nth)内的元素
+  - 但这两个子序列内的元素次序无保证
+
+### 7.11. merge sort
+
+- 排序
+  - 利用分而治之的概念对区间进行排序
+  - 先分割，再排序，再利用inplace_merge合并
+- 时间复杂度O(NlogN),和Quick Sort一样，但是需要额外空间，所以效率较低
+- 但是它实现简单，概念简单
